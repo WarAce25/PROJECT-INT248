@@ -11,7 +11,6 @@ import seaborn as sns
 matplotlib.style.use('ggplot')
 import calendar
 
-
 data=pd.read_csv('Uber Drives.csv')
 data.head()
 
@@ -19,19 +18,23 @@ data.head()
 Step-2 Cleaning the data
 
 data.tail()
-
 data=data[:-1]
 
 \\checking for null values
+
 data.isnull().sum()
 sns.heatmap(data.isnull(),yticklabels=False,cmap="viridis")
 
+
 \\drop/remove the null values from data
+
 data=data.dropna()
 sns.heatmap(data.isnull(),yticklabels=False,cmap="viridis")
 
 step 3 transforming the data
+
 \\Getting an hour, day, days of the week, a month from the date of the trip.
+
 data['START_DATE*'] = pd.to_datetime(data['START_DATE*'], format="%m/%d/%Y %H:%M")
 data['END_DATE*'] = pd.to_datetime(data['END_DATE*'], format="%m/%d/%Y %H:%M")
 
@@ -53,6 +56,7 @@ data['MONTH']=month
 data['WEEKDAY']=weekday
 
 \\finding travelling time
+
 time=[]
 data['TRAVELLING_TIME']=data['END_DATE*']-data['START_DATE*']
 for i in data['TRAVELLING_TIME']:
@@ -62,6 +66,7 @@ data.head()
 
 
 \\Calculating the average speed of the trip
+
 data['TRAVELLING_TIME']=data['TRAVELLING_TIME']/60
 data['SPEED']=data['MILES*']/data['TRAVELLING_TIME']
 data.head()
@@ -69,30 +74,29 @@ data.head()
 
 Step-4 Visualizing the data
 
-Different categories of data. From data, we can see most of the people 
-use UBER for business purposes.
+\\Different categories of data. From data, we can see most of the people use UBER for business purposes.
 sns.countplot(x='CATEGORY*',data=data)
 
-Histogram for miles. Most of people not having a long trip.
+\\Histogram for miles. Most of people not having a long trip.
 data['MILES*'].plot.hist()
 
-Trips for purpose. Mostly the purpose of the trip is meeting and meal/entertain.
+\\Trips for purpose. Mostly the purpose of the trip is meeting and meal/entertain.
 data['PURPOSE*'].value_counts().plot(kind='bar',figsize=(10,5),color='blue')
 
-Trips per hour of the day.
+\\Trips per hour of the day.
 data['HOUR'].value_counts().plot(kind='bar',figsize=(10,5),color='green')
 
-Trips per day of a week. The highest number of trip on Friday.
+\\Trips per day of a week. The highest number of trip on Friday.
 data['WEEKDAY'].value_counts().plot(kind='bar',color='green')
 
-Trips per day of the month
+\\Trips per day of the month
 data['DAY'].value_counts().plot(kind='bar',figsize=(15,5),color='green')
 
-Trips in a month.
+\\Trips in a month.
 data['MONTH'].value_counts().plot(kind='bar',figsize=(10,5),color='green')
 
-The starting points of trips. The highest number of people are from Cary who takes the trip.
+\\The starting points of trips. The highest number of people are from Cary who takes the trip.
 data['START*'].value_counts().plot(kind='bar',figsize=(25,5),color='red')
 
-Comparing all the purpose with miles, hour, day of the month, day of the week, month, Travelling time.
+\\Comparing all the purpose with miles, hour, day of the month, day of the week, month, Travelling time.
 data.groupby('PURPOSE*').mean().plot(kind='bar',figsize=(15,5))
